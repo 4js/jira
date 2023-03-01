@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-export const isFalse: (value: unknown) => boolean = (value) =>
-  value === 0 ? true : !!value;
+export const isFalse = (value: unknown) => (value === 0 ? true : !!value);
 
 // 在一个函数里 改变传入的对象本身上是不好的
 export const cleanObject = (object: { [key: string]: unknown }) => {
@@ -15,13 +14,13 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
   return result;
 };
 
-export const useMount = (callback: Function) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
   }, []);
 };
 
-export const useDebounce = (value: any, delay: number) => {
+export const useDebounce = <V>(value: V, delay?: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
@@ -32,4 +31,19 @@ export const useDebounce = (value: any, delay: number) => {
   }, [value, delay]);
 
   return debouncedValue;
+};
+
+export const useArray = <T>(initialValue: T[]) => {
+  const [value, setValue] = useState(initialValue);
+  return {
+    value,
+    setValue,
+    clear: () => setValue([]),
+    add: (item: T) => setValue([...value, item]),
+    removeIndex: (index: number) => {
+      const copy = [...value];
+      copy.splice(index, 1);
+      setValue(copy);
+    },
+  };
 };
