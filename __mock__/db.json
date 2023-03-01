@@ -1,0 +1,79 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "骑手管理",
+      "personId": 1,
+      "organization": "外卖组",
+      "created": 1604989757139
+    },
+    {
+      "id": 2,
+      "name": "商务管理",
+      "personId": 1,
+      "organization": "外卖组",
+      "created": 1604989757139
+    },
+    {
+      "id": 3,
+      "name": "营销管理",
+      "personId": 2,
+      "organization": "销售组",
+      "created": 1604989757139
+    },
+    {
+      "id": 4,
+      "name": "市场管理",
+      "personId": 3,
+      "organization": "市场组",
+      "created": 1604989757139
+    },
+    {
+      "id": 5,
+      "name": "技术管理",
+      "personId": 4,
+      "organization": "技术组",
+      "created": 1604989757139
+    },
+    {
+      "id": 6,
+      "name": "人事管理",
+      "personId": 5,
+      "organization": "人事组",
+      "created": 1604989757139
+    },
+    {
+      "id": 7,
+      "name": "客服管理",
+      "personId": 6,
+      "organization": "客服组",
+      "created": 1604989757139
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "张三"
+    },
+    {
+      "id": 2,
+      "name": "李四"
+    },
+    {
+      "id": 3,
+      "name": "王五"
+    },
+    {
+      "id": 4,
+      "name": "胡六"
+    },
+    {
+      "id": 5,
+      "name": "杨七"
+    },
+    {
+      "id": 6,
+      "name": "朱八"
+    }
+  ]
+}
