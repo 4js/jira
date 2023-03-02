@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, Card, Divider } from "antd";
+import { Button, Card, Divider, Typography } from "antd";
 import React, { useState } from "react";
 import { LoginScreen } from "./login";
 import { RegisterScreen } from "./register";
@@ -8,6 +8,7 @@ import left from "assets/left.svg";
 import right from "assets/right.svg";
 
 export const UnauthenticatedApp = () => {
+  const [error, setError] = useState<Error | null>(null);
   const [isLogin, setIsLogin] = useState(true);
   return (
     <Container>
@@ -15,7 +16,14 @@ export const UnauthenticatedApp = () => {
       <Header />
       <ShadowCard>
         <Title>{isLogin ? "请登录" : "请注册"}</Title>
-        {isLogin ? <LoginScreen /> : <RegisterScreen />}
+        {error ? (
+          <Typography.Text type="danger">{error.message}</Typography.Text>
+        ) : null}
+        {isLogin ? (
+          <LoginScreen onError={setError} />
+        ) : (
+          <RegisterScreen onError={setError} />
+        )}
         <Divider />
         <LongButton type="link" onClick={() => setIsLogin(!isLogin)}>
           {isLogin ? "还没有账号?去注册" : "已有账号，去登录"}

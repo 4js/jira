@@ -3,7 +3,7 @@ import { Row } from "components/lib";
 import { useAuth } from "context/auth-context";
 import { ProjectListScreen } from "screen/project-list";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
-import { Dropdown } from "antd";
+import { Dropdown, Button } from "antd";
 
 export const AuthenticatedApp = () => {
   const { user, logout } = useAuth();
@@ -22,14 +22,18 @@ export const AuthenticatedApp = () => {
               items: [
                 {
                   key: "1",
-                  label: <a onClick={logout}>退出登录</a>,
+                  label: (
+                    <Button type="link" onClick={logout}>
+                      退出登录
+                    </Button>
+                  ),
                 },
               ],
             }}
           >
-            <a onClick={(e) => e.preventDefault()}>
+            <Button type="link" onClick={(e) => e.preventDefault()}>
               {user ? `hi,${user.name}` : ""}
-            </a>
+            </Button>
           </Dropdown>
         </HeaderRight>
       </Header>

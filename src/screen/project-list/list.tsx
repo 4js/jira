@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 import React from "react";
 import { User } from "./search-panel";
@@ -6,16 +6,15 @@ import { User } from "./search-panel";
 export interface Project {
   id: number;
   name: string;
-  personId: number;
+  personId: string;
   organization: string;
   created: number;
 }
-interface ListProps {
+interface ListProps extends TableProps<Project> {
   users: User[];
-  list: Project[];
 }
 
-export const List = ({ list, users }: ListProps) => {
+export const List = ({ users, ...props }: ListProps) => {
   return (
     <Table
       columns={[
@@ -33,7 +32,10 @@ export const List = ({ list, users }: ListProps) => {
           render(value, project) {
             return (
               <span>
-                {users.find((u: User) => u.id === project.personId)?.name}
+                {
+                  users.find((u: User) => u.id === Number(project.personId))
+                    ?.name
+                }
               </span>
             );
           },
@@ -51,8 +53,7 @@ export const List = ({ list, users }: ListProps) => {
           },
         },
       ]}
-      rowKey={"id"}
-      dataSource={list}
+      {...props}
     />
   );
 };

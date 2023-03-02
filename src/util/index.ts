@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useEffect } from "react";
 export const isFalse = (value: unknown) => (value === 0 ? true : !!value);
+export const isVoid = (value: unknown) =>
+  value === undefined || value == null || value === "";
 
 // 在一个函数里 改变传入的对象本身上是不好的
 export const cleanObject = (object: { [key: string]: unknown }) => {
   const result = { ...object };
   Object.keys(object).forEach((key) => {
     const value = object[key];
-    if (!isFalse(value)) {
+    if (isVoid(value)) {
       delete result[key];
     }
   });
@@ -17,6 +19,7 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    // eslint-disable-next-line
   }, []);
 };
 

@@ -1,9 +1,9 @@
 import React, { ReactNode, useState } from "react";
 import * as auth from "auth-provider";
-import { register } from "../auth-provider";
 import { User } from "screen/project-list/search-panel";
 import { http } from "util/http";
 import { useMount } from "util/index";
+import { useAsync } from "util/use-async";
 
 interface AuthForm {
   username: string;
@@ -32,15 +32,30 @@ const AuthContext = React.createContext<
 AuthContext.displayName = "AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useMount(() => {
-    bootstrapUser().then(setUser);
-  });
-
+  const {
+    run,
+    isIddle,
+    isLoading,
+    isError,
+    error,
+    data: user,
+    setData: setUser,
+  } = useAsync<User | null>();
   const login = (form: AuthForm) => auth.login(form).then(setUser);
   const register = (form: AuthForm) => auth.register(form).then(setUser);
   const logout = () => auth.logout().then(() => setUser(null));
+
+  useMount(() => {
+    run(bootstrapUser());
+  });
+
+  if (isIddle || isLoading) {
+    return <p>loading...</p>;
+  }
+
+  if (isError) {
+    return <p>{error?.message}</p>;
+  }
 
   return (
     <AuthContext.Provider
