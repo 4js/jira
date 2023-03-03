@@ -1,19 +1,17 @@
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
-import { useState } from "react";
-import { useDebounce } from "util/index";
+import { useDebounce, useDocumentTitle } from "util/index";
 import styled from "@emotion/styled";
 import { useProjects } from "util/project";
 import { useUsers } from "util/user";
+import { useProjectParams } from "./util";
 
 export const ProjectListScreen = () => {
-  const [param, setParam] = useState({
-    name: "",
-    personId: "",
-  });
-  const debouncedParam = useDebounce(param, 400);
+  const [param, setParam] = useProjectParams();
   const { data: users } = useUsers();
-  const { data: list, isLoading } = useProjects(debouncedParam);
+  const { data: list, isLoading } = useProjects(useDebounce(param, 400));
+
+  useDocumentTitle("项目列表");
 
   return (
     <Container>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
 export const isFalse = (value: unknown) => (value === 0 ? true : !!value);
 export const isVoid = (value: unknown) =>
@@ -49,4 +49,21 @@ export const useArray = <T>(initialValue: T[]) => {
       setValue(copy);
     },
   };
+};
+
+export const useDocumentTitle = (title: string, keepUnmount = true) => {
+  const oldTitle = useRef(document.title).current;
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  useEffect(() => {
+    return () => {
+      if (!keepUnmount) {
+        document.title = oldTitle;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 };

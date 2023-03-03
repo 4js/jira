@@ -1,12 +1,13 @@
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 import React from "react";
+import { Link } from "react-router-dom";
 import { User } from "./search-panel";
 
 export interface Project {
   id: number;
   name: string;
-  personId: string;
+  personId: number;
   organization: string;
   created: number;
 }
@@ -21,7 +22,9 @@ export const List = ({ users, ...props }: ListProps) => {
         {
           title: "名称",
           dataIndex: "name",
-          // sortor: (a, b) => a.name.localCompare(b.name)
+          render(value, project) {
+            return <Link to={`${project.id}`}>{value}</Link>;
+          },
         },
         {
           title: "部门",
