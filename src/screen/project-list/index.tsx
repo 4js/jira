@@ -9,7 +9,7 @@ import { useProjectParams } from "./util";
 export const ProjectListScreen = () => {
   const [param, setParam] = useProjectParams();
   const { data: users } = useUsers();
-  const { data: list, isLoading } = useProjects(useDebounce(param, 400));
+  const { data: list, isLoading, retry } = useProjects(useDebounce(param, 400));
 
   useDocumentTitle("项目列表");
 
@@ -22,6 +22,7 @@ export const ProjectListScreen = () => {
         dataSource={list || []}
         rowKey={"id"}
         users={users || []}
+        refresh={() => retry()}
       />
     </Container>
   );

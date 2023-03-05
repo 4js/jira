@@ -67,3 +67,16 @@ export const useDocumentTitle = (title: string, keepUnmount = true) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
+
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  return mountedRef;
+};

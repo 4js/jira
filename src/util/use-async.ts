@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useMountedRef } from "util/index";
 interface State<D> {
   error: Error | null;
   data: D | null;
@@ -24,6 +25,8 @@ export const useAsync = <D>(
     ...defaultInitialState,
     ...initialState,
   });
+  const [retry, setRetry] = useState(() => () => {});
+  const mountedRef = useMountedRef();
 
   const setData = (data: D) =>
     setState({
@@ -39,23 +42,35 @@ export const useAsync = <D>(
       stat: "error",
     });
 
-  const run = (promise: Promise<D>) => {
-    if (!promise || !promise.then) {
-      throw new Error("请传入Promise类型数据");
-    }
-    setState({ ...state, stat: "loading" });
+  const run = useCallback(
+    (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+      if (!promise || !promise.then) {
+        throw new Error("请传入Promise类型数据");
+      }
 
-    return promise
-      .then((data) => {
-        setData(data);
-        return data;
-      })
-      .catch((error) => {
-        setError(error);
-        if (config.throwError) return Promise.reject(error);
-        return error;
+      setRetry(() => () => {
+        if (runConfig?.retry) {
+          run(runConfig?.retry(), runConfig);
+        }
       });
-  };
+
+      setState({ ...state, stat: "loading" });
+
+      return promise
+        .then((data) => {
+          // 组件卸载时候就不要回填数据了
+          if (mountedRef.current) setData(data);
+          return data;
+        })
+        .catch((error) => {
+          setError(error);
+          if (config.throwError) return Promise.reject(error);
+          return error;
+        });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    []
+  );
 
   return {
     isIddle: state.stat === "iddle",
@@ -65,6 +80,7 @@ export const useAsync = <D>(
     run,
     setData,
     setError,
+    retry,
     ...state,
   };
 };
