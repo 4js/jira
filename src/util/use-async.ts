@@ -28,19 +28,25 @@ export const useAsync = <D>(
   const [retry, setRetry] = useState(() => () => {});
   const mountedRef = useMountedRef();
 
-  const setData = (data: D) =>
-    setState({
-      data,
-      stat: "success",
-      error: null,
-    });
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        data,
+        stat: "success",
+        error: null,
+      }),
+    []
+  );
 
-  const setError = (error: Error) =>
-    setState({
-      error,
-      data: null,
-      stat: "error",
-    });
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        error,
+        data: null,
+        stat: "error",
+      }),
+    []
+  );
 
   const run = useCallback(
     (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
@@ -54,7 +60,7 @@ export const useAsync = <D>(
         }
       });
 
-      setState({ ...state, stat: "loading" });
+      setState((prevState) => ({ ...prevState, stat: "loading" }));
 
       return promise
         .then((data) => {
@@ -67,9 +73,8 @@ export const useAsync = <D>(
           if (config.throwError) return Promise.reject(error);
           return error;
         });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    []
+    [config.throwError, mountedRef, setData, setError]
   );
 
   return {

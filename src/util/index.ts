@@ -64,8 +64,7 @@ export const useDocumentTitle = (title: string, keepUnmount = true) => {
         document.title = oldTitle;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [keepUnmount, oldTitle]);
 };
 
 export const useMountedRef = () => {

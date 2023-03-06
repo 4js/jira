@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useUrlQueryParam } from "util/url";
 
 export const useProjectParams = () => {
@@ -10,4 +10,20 @@ export const useProjectParams = () => {
     ),
     setParam,
   ] as const;
+};
+
+export const useProjectModal = () => {
+  const [{ projectCreate }, setProjectCreate] = useUrlQueryParam([
+    "projectCreate",
+  ]);
+
+  const open = useCallback(
+    () => setProjectCreate({ projectCreate: true }),
+    [setProjectCreate]
+  );
+  const close = useCallback(
+    () => setProjectCreate({ projectCreate: false }),
+    [setProjectCreate]
+  );
+  return [projectCreate === "true", open, close] as const;
 };

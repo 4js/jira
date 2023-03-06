@@ -1,3 +1,5 @@
+// import './wdyr'
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -5,6 +7,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { loadDevTools } from "jira-dev-tool";
 import { AppProvider } from "context";
+import { store } from "store/index";
+import { Provider } from "react-redux";
 import "antd/dist/reset.css";
 
 const root = ReactDOM.createRoot(
@@ -14,9 +18,11 @@ const root = ReactDOM.createRoot(
 loadDevTools(() => {
   root.render(
     <React.StrictMode>
-      <AppProvider>
-        <App />
-      </AppProvider>
+      <Provider store={store}>
+        <AppProvider>
+          <App />
+        </AppProvider>
+      </Provider>
     </React.StrictMode>
   );
 });
