@@ -1,4 +1,6 @@
 import styled from "@emotion/styled";
+import { Typography } from "antd";
+import { isError } from "react-query";
 
 export const Row = styled.div<{
   gap?: number | boolean;
@@ -20,3 +22,10 @@ export const Row = styled.div<{
         : undefined};
   }
 `;
+
+export const ErrorBox = ({ error }: { error: unknown }) => {
+  if (isError(error)) {
+    return <Typography.Text type="danger">{error?.message}</Typography.Text>;
+  }
+  return null;
+};

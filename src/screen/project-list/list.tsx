@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { onOpen } from "store/project-modal.slice";
 import { useEditProject } from "util/project";
 import { User } from "./search-panel";
+import { useUrlQueryParam } from "util/url";
+import { useProjectModal } from "./util";
 
 export interface Project {
   id: number;
@@ -18,14 +20,13 @@ export interface Project {
 }
 interface ListProps extends TableProps<Project> {
   users: User[];
-  refresh: () => void;
+  refresh?: () => void;
 }
 
-export const List = ({ users, refresh, ...props }: ListProps) => {
-  const dispatch = useDispatch();
+export const List = ({ users, ...props }: ListProps) => {
+  // const dispatch = useDispatch();
   const { mutate } = useEditProject();
-  const pinProject = (id: number) => (pin: boolean) =>
-    mutate({ id, pin }).then(refresh);
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
   return (
     <div>
       <Table
@@ -80,32 +81,41 @@ export const List = ({ users, refresh, ...props }: ListProps) => {
           {
             title: "操作",
             render(value, project) {
-              return (
-                <Dropdown
-                  menu={{
-                    items: [
-                      {
-                        key: 1,
-                        label: (
-                          <Button
-                            type="link"
-                            onClick={() => dispatch(onOpen())}
-                          >
-                            编辑项目
-                          </Button>
-                        ),
-                      },
-                    ],
-                  }}
-                >
-                  <a onClick={(e) => e.preventDefault()}>...</a>
-                </Dropdown>
-              );
+              return <More project={project} />;
             },
           },
         ]}
         {...props}
       />
     </div>
+  );
+};
+
+List.whyDidYouRender = true;
+
+const More = ({ project }: { project: Project }) => {
+  const { startEdit } = useProjectModal();
+  return (
+    <Dropdown
+      menu={{
+        items: [
+          {
+            key: 1,
+            label: (
+              <Button
+                type="link"
+                onClick={() => {
+                  startEdit(project.id);
+                }}
+              >
+                编辑项目
+              </Button>
+            ),
+          },
+        ],
+      }}
+    >
+      <a onClick={(e) => e.preventDefault()}>...</a>
+    </Dropdown>
   );
 };

@@ -2,8 +2,8 @@ import { Select, SelectProps } from "antd";
 
 interface IdSelectProps
   extends Omit<SelectProps, "value" | "onChange" | "options"> {
-  value: string | number | null | undefined;
-  onChange: (value?: number) => void;
+  value?: string | number | null | undefined;
+  onChange?: (value?: number) => void;
   defaultOptionName?: string;
   options?: { name: string; id: number }[];
 }
@@ -14,8 +14,8 @@ export const IdSelect = (props: IdSelectProps) => {
   return (
     <Select
       {...rest}
-      value={toNumber(value)}
-      onChange={(value) => onChange(toNumber(value) || undefined)}
+      value={options?.length ? toNumber(value) : 0}
+      onChange={(value) => onChange?.(toNumber(value) || undefined)}
     >
       {defaultOptionName ? (
         <Select.Option value={0}>{defaultOptionName}</Select.Option>

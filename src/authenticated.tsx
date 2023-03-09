@@ -10,14 +10,14 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { useProjects } from "util/project";
 import { onOpen } from "store/project-modal.slice";
 import { useDispatch } from "react-redux";
-import { useMemo } from "react";
+import { useProjectModal } from "screen/project-list/util";
 
 export const AuthenticatedApp = () => {
   return (
     <Container>
-      <PageHeader />
-      <Main>
-        <Router>
+      <Router>
+        <PageHeader />
+        <Main>
           <Routes>
             <Route path={"/"} element={<Navigate to={"/projects"} />} />
             <Route path="/projects" element={<ProjectListScreen />}></Route>
@@ -26,8 +26,8 @@ export const AuthenticatedApp = () => {
               element={<ProjectScreen />}
             ></Route>
           </Routes>
-        </Router>
-      </Main>
+        </Main>
+      </Router>
     </Container>
   );
 };
@@ -51,9 +51,8 @@ const PageHeader = () => {
 };
 
 const ProjectPopover = () => {
-  const dispatch = useDispatch();
-  const params = useMemo(() => ({}), []);
-  const { data: projects } = useProjects(params);
+  const { open } = useProjectModal();
+  const { data: projects } = useProjects();
   return (
     <Popover
       content={
@@ -67,7 +66,7 @@ const ProjectPopover = () => {
             ))}
           </List>
           <Typography.Text>其它操作</Typography.Text>
-          <Button type="link" block onClick={() => dispatch(onOpen())}>
+          <Button type="link" block onClick={() => open()}>
             创建项目
           </Button>
         </div>

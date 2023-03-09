@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
-import { useUrlQueryParam } from "util/url";
+import { useProject } from "util/project";
+import { useSetUrlSearchParam, useUrlQueryParam } from "util/url";
 
 export const useProjectParams = () => {
   const [param, setParam] = useUrlQueryParam(["name", "personId"]);
@@ -13,17 +14,45 @@ export const useProjectParams = () => {
 };
 
 export const useProjectModal = () => {
-  const [{ projectCreate }, setProjectCreate] = useUrlQueryParam([
-    "projectCreate",
-  ]);
+  // const setUrlParams = useSetUrlSearchParam();
+  const [{ projectCreate, editingProjectId }, setProjectModalParam] =
+    useUrlQueryParam(["projectCreate", "editingProjectId"]);
+
+  // const [{ editingProjectId }, setEitingProjectId] = useUrlQueryParam([
+  //   "editingProjectId",
+  // ]);
+
+  const { data: editingProject, isLoading } = useProject(
+    Number(editingProjectId)
+  );
 
   const open = useCallback(
-    () => setProjectCreate({ projectCreate: true }),
-    [setProjectCreate]
+    () => setProjectModalParam({ projectCreate: true }),
+    [setProjectModalParam]
   );
-  const close = useCallback(
-    () => setProjectCreate({ projectCreate: false }),
-    [setProjectCreate]
+  const close = useCallback(() => {
+    setProjectModalParam({
+      projectCreate: undefined,
+      editingProjectId: undefined,
+    });
+    // setEitingProjectId({ editingProjectId: undefined });
+  }, [setProjectModalParam]);
+  // const close = useCallback(
+  //   () => setUrlParams({projectCreate: '', editingProjectId: '' }),
+  //   [setUrlParams]
+  // );
+  const startEdit = useCallback(
+    (id: number) => {
+      setProjectModalParam({ editingProjectId: id });
+    },
+    [setProjectModalParam]
   );
-  return [projectCreate === "true", open, close] as const;
+
+  return {
+    isModalOpen: projectCreate === "true" || Boolean(editingProjectId),
+    editingProject,
+    open,
+    close,
+    startEdit,
+  };
 };

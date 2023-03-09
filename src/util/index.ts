@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 export const isFalse = (value: unknown) => (value === 0 ? true : !!value);
+export const isError = (value: any): value is Error => value?.message;
 export const isVoid = (value: unknown) =>
   value === undefined || value == null || value === "";
 
